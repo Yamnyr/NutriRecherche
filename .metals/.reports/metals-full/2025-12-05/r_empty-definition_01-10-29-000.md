@@ -1,3 +1,43 @@
+error id: file:///C:/Users/admin/Documents/dev/ipssi/ia/scala/Scala-Food/scala-3-project-template/src/main/scala/Server.scala:`<none>`.
+file:///C:/Users/admin/Documents/dev/ipssi/ia/scala/Scala-Food/scala-3-project-template/src/main/scala/Server.scala
+empty definition using pc, found symbol in pc: `<none>`.
+empty definition using semanticdb
+empty definition using fallback
+non-local guesses:
+	 -cats/effect.
+	 -cats/effect#
+	 -cats/effect().
+	 -org/http4s.
+	 -org/http4s#
+	 -org/http4s().
+	 -org/http4s/dsl/io.
+	 -org/http4s/dsl/io#
+	 -org/http4s/dsl/io().
+	 -org/http4s/implicits.
+	 -org/http4s/implicits#
+	 -org/http4s/implicits().
+	 -org/http4s/ember/server.
+	 -org/http4s/ember/server#
+	 -org/http4s/ember/server().
+	 -org/http4s/ember/client.
+	 -org/http4s/ember/client#
+	 -org/http4s/ember/client().
+	 -org/http4s/circe.
+	 -org/http4s/circe#
+	 -org/http4s/circe().
+	 -io/circe/syntax.
+	 -io/circe/syntax#
+	 -io/circe/syntax().
+	 -com/comcast/ip4s.
+	 -com/comcast/ip4s#
+	 -com/comcast/ip4s().
+	 -scala/Predef.
+	 -scala/Predef#
+	 -scala/Predef().
+offset: 2613
+uri: file:///C:/Users/admin/Documents/dev/ipssi/ia/scala/Scala-Food/scala-3-project-template/src/main/scala/Server.scala
+text:
+```scala
 package app
 
 import cats.effect._
@@ -34,9 +74,9 @@ object Server extends IOApp {
 
       val routes = HttpRoutes.of[IO] {
 
-        // ------------------------------------------------------------------
-        // SEARCH – renvoie maintenant images + infos complètes
-        // ------------------------------------------------------------------
+        // -------------------------------
+        // Recherche avancée
+        // -------------------------------
         case GET -> Root / "api" / "search"
             :? QParam(maybeQ)
             +& BrandParam(maybeBrand)
@@ -54,11 +94,12 @@ object Server extends IOApp {
             case Some(query) =>
               api.rawSearch(query).flatMap { resp =>
 
+                // FILTRES
                 val filtered = resp.products
                   .filter(p => maybeBrand.forall(b => p.brands.exists(_.contains(b))))
                   .filter(p => minEnergy.forall(min => p.nutriments.flatMap(_.energy).exists(_ >= min)))
                   .filter(p => maxEnergy.forall(max => p.nutriments.flatMap(_.energy).exists(_ <= max)))
-                  .filter(p => minSugar.forall(min => p.nutriments.flatMap(_.sugars).exists(_ >= min)))
+                  .filter(p => minSugar.forall(min => p.nutriments.flatMap(_.sugars).exi@@sts(_ >= min)))
                   .filter(p => maxSugar.forall(max => p.nutriments.flatMap(_.sugars).exists(_ <= max)))
                   .filter(p => minFat.forall(min => p.nutriments.flatMap(_.fat).exists(_ >= min)))
                   .filter(p => maxFat.forall(max => p.nutriments.flatMap(_.fat).exists(_ <= max)))
@@ -84,21 +125,11 @@ object Server extends IOApp {
                 )
               }
 
-        // ------------------------------------------------------------------
-        // PRODUCT DETAIL – renvoie + d'info + alternatives
-        // ------------------------------------------------------------------
+        // -------------------------------
+        // Détail produit
+        // -------------------------------
         case GET -> Root / "api" / "product" / barcode =>
-          for {
-            p <- api.getProduct(barcode)
-            alternatives <- api.rawSearch(p.product_name.getOrElse(""))
-              .map(_.products.filter(_.code != barcode).take(8)) // top 8 alternatives
-            res <- Ok(
-              Map(
-                "product" -> p.asJson,
-                "alternatives" -> alternatives.asJson
-              ).asJson
-            )
-          } yield res
+          api.getProduct(barcode).flatMap(p => Ok(p.asJson))
       }
 
       val httpApp = Router("/" -> routes).orNotFound
@@ -121,3 +152,10 @@ object Server extends IOApp {
     }
   }
 }
+
+```
+
+
+#### Short summary: 
+
+empty definition using pc, found symbol in pc: `<none>`.

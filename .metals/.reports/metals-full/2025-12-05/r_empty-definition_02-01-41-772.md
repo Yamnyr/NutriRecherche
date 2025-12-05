@@ -1,3 +1,31 @@
+error id: file:///C:/Users/admin/Documents/dev/ipssi/ia/scala/Scala-Food/scala-3-project-template/src/main/scala/OpenFoodClient.scala:`<none>`.
+file:///C:/Users/admin/Documents/dev/ipssi/ia/scala/Scala-Food/scala-3-project-template/src/main/scala/OpenFoodClient.scala
+empty definition using pc, found symbol in pc: `<none>`.
+empty definition using semanticdb
+empty definition using fallback
+non-local guesses:
+	 -org/http4s.
+	 -org/http4s#
+	 -org/http4s().
+	 -org/http4s/client.
+	 -org/http4s/client#
+	 -org/http4s/client().
+	 -org/http4s/implicits.
+	 -org/http4s/implicits#
+	 -org/http4s/implicits().
+	 -org/http4s/circe/CirceEntityCodec.
+	 -org/http4s/circe/CirceEntityCodec#
+	 -org/http4s/circe/CirceEntityCodec().
+	 -io/circe/syntax.
+	 -io/circe/syntax#
+	 -io/circe/syntax().
+	 -scala/Predef.
+	 -scala/Predef#
+	 -scala/Predef().
+offset: 434
+uri: file:///C:/Users/admin/Documents/dev/ipssi/ia/scala/Scala-Food/scala-3-project-template/src/main/scala/OpenFoodClient.scala
+text:
+```scala
 package app
 
 import cats.effect.IO
@@ -12,7 +40,7 @@ class OpenFoodClient(client: Client[IO]) {
   /** Recherche OpenFoodFacts brute (avec images) */
   def rawSearch(query: String): IO[SearchResponse] = {
     val uri = uri"https://world.openfoodfacts.org/cgi/search.pl"
-      .withQueryParams(
+      .withQueryParams@@(
         Map(
           "search_terms" -> query,
           "search_simple" -> "1",
@@ -69,3 +97,10 @@ class OpenFoodClient(client: Client[IO]) {
       }
   }
 }
+
+```
+
+
+#### Short summary: 
+
+empty definition using pc, found symbol in pc: `<none>`.

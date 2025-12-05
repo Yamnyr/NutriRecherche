@@ -3,34 +3,30 @@ package app
 import io.circe._
 import io.circe.generic.semiauto._
 
-// ----------------------------------------------------
-// Nutriments (décodage manuel des champs *_100g)
-// ----------------------------------------------------
 case class Nutriments(
   energy: Option[Double],
   sugars: Option[Double],
   salt: Option[Double],
-  fat: Option[Double]
+  fat: Option[Double],
+  proteins: Option[Double],
+  fiber: Option[Double]
 )
 
 object Nutriments {
-
   given Decoder[Nutriments] = new Decoder[Nutriments] {
     def apply(c: HCursor): Decoder.Result[Nutriments] =
       for {
-        energy <- c.downField("energy-kcal_100g").as[Option[Double]]
-        sugars <- c.downField("sugars_100g").as[Option[Double]]
-        salt   <- c.downField("salt_100g").as[Option[Double]]
-        fat    <- c.downField("fat_100g").as[Option[Double]]
-      } yield Nutriments(energy, sugars, salt, fat)
+        energy   <- c.downField("energy-kcal_100g").as[Option[Double]]
+        sugars   <- c.downField("sugars_100g").as[Option[Double]]
+        salt     <- c.downField("salt_100g").as[Option[Double]]
+        fat      <- c.downField("fat_100g").as[Option[Double]]
+        proteins <- c.downField("proteins_100g").as[Option[Double]]
+        fiber    <- c.downField("fiber_100g").as[Option[Double]]
+      } yield Nutriments(energy, sugars, salt, fat, proteins, fiber)
   }
-
-  given Encoder[Nutriments] = deriveEncoder[Nutriments]
+  given Encoder[Nutriments] = deriveEncoder
 }
 
-// ----------------------------------------------------
-// Le modèle Product (structure interne)
-// ----------------------------------------------------
 case class Product(
   code: String,
   product_name: Option[String],
@@ -39,8 +35,15 @@ case class Product(
   quantity: Option[String],
   nutriscore_grade: Option[String],
   ecoscore_grade: Option[String],
+  nova_group: Option[Int],
+  ingredients_text: Option[String],
+  allergens: Option[String],
+  additives_tags: Option[List[String]],
+  labels: Option[String],
+  countries: Option[String],
   image_url: Option[String],
   image_small_url: Option[String],
+  image_front_url: Option[String],
   nutriments: Option[Nutriments]
 )
 
@@ -49,9 +52,6 @@ object Product {
   given Encoder[Product] = deriveEncoder
 }
 
-// ----------------------------------------------------
-// Réponse API OFF pour /product/code
-// ----------------------------------------------------
 case class ProductResponse(
   code: String,
   product: Option[Product]
@@ -62,14 +62,10 @@ object ProductResponse {
   given Encoder[ProductResponse] = deriveEncoder
 }
 
-// ----------------------------------------------------
-// Réponse de recherche
-// ----------------------------------------------------
 case class SearchResponse(
   count: Int,
   products: List[Product]
 )
-
 object SearchResponse {
   given Decoder[SearchResponse] = deriveDecoder
   given Encoder[SearchResponse] = deriveEncoder
